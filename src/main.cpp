@@ -7,7 +7,7 @@
 
 
 void handleNotValidCommand(std::string input) {
-	std::cout << input << ":  not found" << std::endl;
+	std::cout << input << ": not found" << std::endl;
 
 }
 // Function to split a string into words
