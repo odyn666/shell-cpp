@@ -4,6 +4,12 @@
 #include <sstream>   // For std::istringstream
 #include <algorithm> // For std::find
 
+
+
+void handleNotValidCommand(std::string input) {
+	std::cout << input << ": command not found" << std::endl;
+
+}
 // Function to split a string into words
 std::vector<std::string> splitString(const std::string& input) {
 	std::vector<std::string> splited;
@@ -15,6 +21,11 @@ std::vector<std::string> splitString(const std::string& input) {
 	}
 
 	return splited;
+}
+
+bool isCommandValid(std::vector<std::string> knownCommands, std::string splitedCommands) {
+	return !splitedCommands.empty() &&
+		std::find(knownCommands.begin(), knownCommands.end(), splitedCommands) != knownCommands.end();
 }
 
 int handleExitCommand(std::string& arg) {
@@ -38,12 +49,27 @@ void handleEchoCommand(std::vector<std::string> args) {
 	std::cout << std::endl;
 }
 
+void handleTypeCommand(std::string command, bool isknownCommand) {
+	if (!isknownCommand)
+	{
+		handleNotValidCommand(command);
+	}
+	else
+	{
+
+		std::cout << command << " " << "is a shell builtin" << std::endl;
+	}
+
+}
+
+
+
 int main() {
 	// Flush after every std::cout / std::cerr
 	std::cout << std::unitbuf;
 	std::cerr << std::unitbuf;
 
-	std::vector<std::string> knownCommands{ "exit","echo" };
+	std::vector<std::string> knownCommands{ "exit","echo","type" };
 	std::vector<std::string> args{};
 
 	while (true) {
@@ -61,8 +87,7 @@ int main() {
 		args.erase(args.begin());// removing first elemenct since its command not argument
 
 		// finds command in vector and Ensures we don't access splitedCommands[0] if the input is empty
-		bool isKnownCommand = !splitedCommands.empty() &&
-			std::find(knownCommands.begin(), knownCommands.end(), splitedCommands[0]) != knownCommands.end();
+		bool isKnownCommand = isCommandValid(knownCommands, splitedCommands[0]);
 
 
 		if (isKnownCommand)
@@ -77,10 +102,14 @@ int main() {
 			{
 				handleEchoCommand(args);
 			}
+
+			if (splitedCommands[0] == "type") {
+				handleTypeCommand(args[0], isCommandValid(knownCommands, splitedCommands[1]));
+			}
 		}
 		else
 		{
-			std::cout << input << ": command not found" << std::endl;
+			handleNotValidCommand(input);
 			args.clear();
 		}
 	}
