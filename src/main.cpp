@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -10,4 +11,6 @@ int main() {
 
   std::string input;
   std::getline(std::cin, input);
+  std::cout << input << ": command not found" << std::endl;
+
 }
