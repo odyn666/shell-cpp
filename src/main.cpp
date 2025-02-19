@@ -7,7 +7,7 @@
 
 
 void handleNotValidCommand(std::string input) {
-	std::cout << input << ": command not found" << std::endl;
+	std::cout << input << ":  not found" << std::endl;
 
 }
 // Function to split a string into words
@@ -57,7 +57,7 @@ void handleTypeCommand(std::string command, bool isknownCommand) {
 	else
 	{
 
-		std::cout << command << " " << "is a shell builtin" << std::endl;
+	std::cout << command << " " << "is a shell builtin" << std::endl;
 	}
 
 }
@@ -109,7 +109,7 @@ int main() {
 		}
 		else
 		{
-			handleNotValidCommand(input);
+			std::cout << input << ": command not found" << std::endl;
 			args.clear();
 		}
 	}
