@@ -29,19 +29,31 @@ int handleExitCommand(std::string& arg) {
 	}
 }
 
+void handleEchoCommand(std::vector<std::string> args) {
+
+	for (size_t i = 0; i < args.size(); i++)
+	{
+		std::cout << args[i] << " ";
+	}
+	std::cout << std::endl;
+}
+
 int main() {
 	// Flush after every std::cout / std::cerr
 	std::cout << std::unitbuf;
 	std::cerr << std::unitbuf;
 
-	std::vector<std::string> knownCommands{ "exit" };
+	std::vector<std::string> knownCommands{ "exit","echo" };
 	std::vector<std::string> args{};
 
 	while (true) {
 		std::cout << "$ ";
 
-		std::string input;
+		std::string input{ "" };
 		std::getline(std::cin, input);
+
+		if (input.empty()) continue;
+
 		std::vector<std::string> splitedCommands = splitString(input);
 
 		//set arguments
@@ -52,15 +64,18 @@ int main() {
 		bool isKnownCommand = !splitedCommands.empty() &&
 			std::find(knownCommands.begin(), knownCommands.end(), splitedCommands[0]) != knownCommands.end();
 
+
 		if (isKnownCommand)
 		{
 
 			if (splitedCommands[0] == "exit")
 			{
 				int exitCode = handleExitCommand(args[0]);
-				if (exitCode != -1)
-
-					return exitCode; // returning with provided exit code
+				if (exitCode != -1) return exitCode; // returning with provided exit code
+			}
+			if (splitedCommands[0] == "echo")
+			{
+				handleEchoCommand(args);
 			}
 		}
 		else
