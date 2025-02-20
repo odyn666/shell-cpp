@@ -1,6 +1,7 @@
 #include <algorithm> // For std::find
 #include <filesystem>
 #include <iostream>
+#include <ostream>
 #include <regex>
 #include <sstream> // For std::istringstream
 #include <string>
@@ -82,11 +83,12 @@ void handleTypeCommand(std::string command, bool isknownCommand) {
   std::vector<std::string> paths = splitString(envPath, pathSeparator);
 
   for (std::string path : paths) {
+    /*std::cout << path << std::endl;*/
+    for (const auto &entry : fs::directory_iterator(path)) {
 
-    for (const auto &entry : fs::directory_iterator(envPath)) {
-
-      if (entry.path().string() == envPath + command) {
-        std::cout << entry.path() << " " << std::endl;
+      if (entry.path().string() == path + "/" + command) {
+        std::cout << command << " is " << entry.path().string() << " "
+                  << std::endl;
       }
     }
   }
