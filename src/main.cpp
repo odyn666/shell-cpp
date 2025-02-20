@@ -89,7 +89,7 @@ std::string getExecutablePath(std::string& command) {
 
 		for (const std::string& dir : directories) {
 			std::string fullPath = dir + "\\" + command + ".exe";  // Windows executables usually have .exe
-			if (_access(fullPath.c_str(), X_OK) == 0) {
+			if (_access(fullPath.c_str(), 1) == 0) {
 				return fullPath;
 			}
 		}
