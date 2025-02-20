@@ -3,7 +3,9 @@
 #include <vector>
 #include <sstream>   // For std::istringstream
 #include <algorithm> // For std::find
-
+#include <io.h>      // For _access()
+#define F_OK 0       // File exists
+#define X_OK 1       // Executable
 
 
 void handleNotValidCommand(std::string input) {
@@ -49,18 +51,61 @@ void handleEchoCommand(std::vector<std::string> args) {
 	std::cout << std::endl;
 }
 
-void handleTypeCommand(std::string command, bool isknownCommand) {
-	if (!isknownCommand)
-	{
-		handleNotValidCommand(command);
-	}
-	else
-	{
+std::vector<std::string> split(const std::string& s, char &delimiter) {
+	std::vector<std::string> tokens;
+	std::string token;
+	std::stringstream ss(s);
 
-	std::cout << command << " " << "is a shell builtin" << std::endl;
+	while (std::getline(ss, token)) {
+		tokens.push_back(token);
 	}
 
+	return tokens;
 }
+std::string getExecutablePath(std::string& command) {
+
+	const char* envPath = getenv("PATH");
+	char delimiter{ ';' };
+	if (!envPath) {
+		return "";
+	}
+	std::vector<std::string>directories{ split(envPath,delimiter) };
+
+	for (const std::string& dir : directories) {
+		const char* pathEnv = getenv("PATH");
+		if (!pathEnv) {
+			return "";
+		}
+
+		std::vector<std::string> directories = split(pathEnv, delimiter);  // Windows uses ';' as a separator
+
+		for (const std::string& dir : directories) {
+			std::string fullPath = dir + "\\" + command + ".exe";  // Windows executables usually have .exe
+			if (_access(fullPath.c_str(), X_OK) == 0) {
+				return fullPath;
+			}
+		}
+
+		return "";
+	}
+}
+
+
+	void handleTypeCommand(std::string command, bool isknownCommand) {
+		if (!isknownCommand)
+		{
+			handleNotValidCommand(command);
+		}
+		else
+		{
+
+
+			std::string builtInEnvPath = getExecutablePath(command);
+
+			std::cout << command << " " << "is a shell builtin" << std::endl;
+		}
+	}
+
 
 
 
@@ -75,7 +120,7 @@ int main() {
 	while (true) {
 		std::cout << "$ ";
 
-		std::string input{ "" };
+		std::string input;
 		std::getline(std::cin, input);
 
 		if (input.empty()) continue;
@@ -84,7 +129,7 @@ int main() {
 
 		//set arguments
 		args = splitedCommands;
-		args.erase(args.begin());// removing first elemenct since its command not argument
+		args.erase(args.begin());// removing first element since its command not argument
 
 		// finds command in vector and Ensures we don't access splitedCommands[0] if the input is empty
 		bool isKnownCommand = isCommandValid(knownCommands, splitedCommands[0]);
