@@ -74,23 +74,23 @@ std::string getExecutablePath(std::string &command) {
 }
 
 void handleTypeCommand(std::string command, bool isknownCommand) {
-  if (!isknownCommand) {
-    handleNotValidCommand(command);
-  } else {
+  /*if (!isknownCommand) {*/
+  /*handleNotValidCommand(command);*/
+  /*} else {*/
 
-    std::string envPath = getExecutablePath(command);
-    std::vector<std::string> paths = splitString(envPath, pathSeparator);
+  std::string envPath = getExecutablePath(command);
+  std::vector<std::string> paths = splitString(envPath, pathSeparator);
 
-    for (std::string path : paths) {
+  for (std::string path : paths) {
 
-      for (const auto &entry : fs::directory_iterator(envPath)) {
+    for (const auto &entry : fs::directory_iterator(envPath)) {
 
-        if (entry.path().string() == envPath + command) {
-          std::cout << entry.path() << " " << std::endl;
-        }
+      if (entry.path().string() == envPath + command) {
+        std::cout << entry.path() << " " << std::endl;
       }
     }
   }
+  /*}*/
 }
 
 int main() {
