@@ -3,10 +3,18 @@
 #include <vector>
 #include <sstream>   // For std::istringstream
 #include <algorithm> // For std::find
-#include <io.h>      // For _access()
-#define F_OK 0       // File exists
-#define X_OK 1       // Executable
 
+#ifdef _WIN32
+#include <io.h>    // Windows: _access()
+#define ACCESS _access
+#define PATH_SEPARATOR ';'  // Windows uses ';' in PATH
+#define EXECUTABLE_EXT ".exe"
+#else
+#include <unistd.h> // Unix: access()
+#define ACCESS access
+#define PATH_SEPARATOR ':'  // Unix uses ':'
+#define EXECUTABLE_EXT ""   // No extension needed on Linux/macOS
+#endif
 
 void handleNotValidCommand(std::string input) {
 	std::cout << input << ": not found" << std::endl;
@@ -51,7 +59,7 @@ void handleEchoCommand(std::vector<std::string> args) {
 	std::cout << std::endl;
 }
 
-std::vector<std::string> split(const std::string& s, char &delimiter) {
+std::vector<std::string> split(const std::string& s, char& delimiter) {
 	std::vector<std::string> tokens;
 	std::string token;
 	std::stringstream ss(s);
@@ -91,20 +99,20 @@ std::string getExecutablePath(std::string& command) {
 }
 
 
-	void handleTypeCommand(std::string command, bool isknownCommand) {
-		if (!isknownCommand)
-		{
-			handleNotValidCommand(command);
-		}
-		else
-		{
-
-
-			std::string builtInEnvPath = getExecutablePath(command);
-
-			std::cout << command << " " << "is a shell builtin" << std::endl;
-		}
+void handleTypeCommand(std::string command, bool isknownCommand) {
+	if (!isknownCommand)
+	{
+		handleNotValidCommand(command);
 	}
+	else
+	{
+
+
+		std::string builtInEnvPath = getExecutablePath(command);
+
+		std::cout << command << " " << "is a shell builtin" << std::endl;
+	}
+}
 
 
 
