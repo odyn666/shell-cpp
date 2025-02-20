@@ -1,8 +1,19 @@
 #include <algorithm> // For std::find
+#include <filesystem>
 #include <iostream>
+#include <regex>
 #include <sstream> // For std::istringstream
 #include <string>
 #include <vector>
+
+namespace fs = std::filesystem;
+
+const char pathSeparator =
+#ifdef _WIN32
+    ';';
+#else
+    ':';
+#endif
 
 void handleNotValidCommand(std::string input) {
   std::cout << input << ": not found" << std::endl;
@@ -18,6 +29,18 @@ std::vector<std::string> splitString(const std::string &input) {
   }
 
   return splited;
+}
+
+std::vector<std::string> splitString(std::string str, char delimiter) {
+  // Using str in a string stream
+  std::stringstream ss(str);
+  std::vector<std::string> res;
+  std::string token;
+  while (std::getline(ss, token, delimiter)) {
+    res.push_back(token);
+  }
+
+  return res;
 }
 
 bool isCommandValid(std::vector<std::string> knownCommands,
@@ -47,7 +70,7 @@ std::string getExecutablePath(std::string &command) {
 
   const char *envPath = getenv("PATH");
 
-  return "";
+  return envPath;
 }
 
 void handleTypeCommand(std::string command, bool isknownCommand) {
@@ -55,9 +78,18 @@ void handleTypeCommand(std::string command, bool isknownCommand) {
     handleNotValidCommand(command);
   } else {
 
-    std::string builtInEnvPath = getExecutablePath(command);
+    std::string envPath = getExecutablePath(command);
+    std::vector<std::string> paths = splitString(envPath, pathSeparator);
 
-    std::cout << command << " " << "is a shell builtin" << std::endl;
+    for (std::string path : paths) {
+
+      for (const auto &entry : fs::directory_iterator(envPath)) {
+
+        if (entry.path().string() == envPath + command) {
+          std::cout << entry.path() << " " << std::endl;
+        }
+      }
+    }
   }
 }
 
