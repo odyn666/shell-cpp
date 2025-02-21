@@ -94,6 +94,7 @@ void handleTypeCommand(std::string command, bool isKnownCommand) {
       }
     }
   }
+  std::cout << command << ": not found" << std::endl;
 }
 /*void handleTypeCommand(std::string command, bool isknownCommand) {*/
 /*  if (!isknownCommand) {*/
