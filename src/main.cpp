@@ -1,4 +1,4 @@
-#include "../src/handler/command/commandHandler.hpp"
+#include "commandHandler.hpp"
 #include <iostream>
 #include <ostream>
 #include <string>
