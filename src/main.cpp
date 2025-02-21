@@ -1,4 +1,5 @@
 #include "commandHandler.hpp"
+#include <cstddef>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -47,18 +48,24 @@ int main() {
                           isCommandValid(knownCommands, splitedCommands[1]));
       }
     } else {
-      std::string pathToExecutable =
-          extractPathToExecutable(splitedCommands[0])[0];
+      std::string pathToExecutable{};
+      if (extractPathToExecutable(splitedCommands[0]).empty()) {
+        pathToExecutable = "";
+      } else {
+        pathToExecutable = extractPathToExecutable(splitedCommands[0])[0];
+      }
 #ifdef _WIN32
-      handleFileExecution(pathToExecutable,args); // Example for Windows
+      handleFileExecution(pathToExecutable, args); // Example for Windows
 
 #else
+      if (!pathToExecutable.empty()) {
 
-      handleFileExecution(pathToExecutable, args); // Example for Linux
+        handleFileExecution(pathToExecutable, args); // Example for Linux
+      } // }
 #endif
-                                                 // std::cout << input << ":
-                                                 // command not found" <<
-                                                 // std::endl;
+                                                   // std::cout << input << ":
+                                                   // command not found" <<
+                                                   // std::endl;
       args.clear();
     }
   }
