@@ -1,4 +1,4 @@
-#include "handler/command/commandHandler.hpp"
+#include "../src/handler/command/commandHandler.hpp"
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -51,8 +51,7 @@ int main() {
       std::string pathToExecutable =
           extractPathToExecutable(splitedCommands[0])[0];
 #ifdef _WIN32
-      executeProgram(
-          "C:\\Windows\\System32\\notepad.exe"); // Example for Windows
+      handleFileExecution(pathToExecutable,args); // Example for Windows
 
 #else
 
