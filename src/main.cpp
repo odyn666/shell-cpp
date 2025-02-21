@@ -2,7 +2,6 @@
 #include <iostream>
 #include <ostream>
 #include <string>
-/*#include "commandHandler.hpp"*/
 
 int main() {
   // Flush after every std::cout / std::cerr
