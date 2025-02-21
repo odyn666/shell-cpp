@@ -73,27 +73,48 @@ std::string getExecutablePath(std::string &command) {
 
   return envPath;
 }
+void handleTypeCommand(std::string command, bool isKnownCommand) {
+  if (!isKnownCommand) {
+    std::cout << command << ": not found" << std::endl;
+    return;
+  }
 
-void handleTypeCommand(std::string command, bool isknownCommand) {
-  if (!isknownCommand) {
-    handleNotValidCommand(command);
-  } else {
+  std::string envPath = std::getenv("PATH"); // Get system PATH variable
+  std::vector<std::string> paths =
+      splitString(envPath, pathSeparator); // Split by ':'
 
-    std::string envPath = getExecutablePath(command);
-    std::vector<std::string> paths = splitString(envPath, pathSeparator);
+  for (const std::string &path : paths) {
+    if (!fs::exists(path))
+      continue; // Skip non-existing directories
 
-    for (std::string path : paths) {
-      /*std::cout << path << std::endl;*/
-      for (const auto &entry : fs::directory_iterator(path)) {
-
-        if (entry.path().string() == path + "/" + command) {
-          std::cout << command << " is " << entry.path().string() << " "
-                    << std::endl;
-        }
+    for (const auto &entry : fs::directory_iterator(path)) {
+      if (entry.path().filename() == command) { // Compare only filename
+        std::cout << command << " is " << entry.path().string() << std::endl;
+        return; // Stop after first match
       }
     }
   }
 }
+/*void handleTypeCommand(std::string command, bool isknownCommand) {*/
+/*  if (!isknownCommand) {*/
+/*    handleNotValidCommand(command);*/
+/*  } else {*/
+/**/
+/*    std::string envPath = getExecutablePath(command);*/
+/*    std::vector<std::string> paths = splitString(envPath, pathSeparator);*/
+/**/
+/*    for (std::string path : paths) {*/
+/*      /*std::cout << path << std::endl;*/
+/*      for (const auto &entry : fs::directory_iterator(path)) {*/
+/**/
+/*        if (entry.path().string() == path + "/" + command) {*/
+/*          std::cout << command << " is " << entry.path().string() << " "*/
+/*                    << std::endl;*/
+/*        }*/
+/*      }*/
+/*    }*/
+/*  }*/
+/*}*/
 
 int main() {
   // Flush after every std::cout / std::cerr
