@@ -1,6 +1,8 @@
 #include "handler/command/commandHandler.h"
+#include <filesystem>
 #include <iostream>
 #include <ostream>
+#include <string>
 
 int main() {
   // Flush after every std::cout / std::cerr
@@ -46,7 +48,19 @@ int main() {
                           isCommandValid(knownCommands, splitedCommands[1]));
       }
     } else {
-      std::cout << input << ": command not found" << std::endl;
+      std::string pathToExecutable =
+          extractPathToExecutable(splitedCommands[0])[0];
+#ifdef _WIN32
+      executeProgram(
+          "C:\\Windows\\System32\\notepad.exe"); // Example for Windows
+
+#else
+
+      handleFileExecution(pathToExecutable, args); // Example for Linux
+#endif
+                                                 // std::cout << input << ":
+                                                 // command not found" <<
+                                                 // std::endl;
       args.clear();
     }
   }
