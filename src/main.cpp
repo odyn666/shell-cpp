@@ -96,26 +96,6 @@ void handleTypeCommand(std::string command, bool isKnownCommand) {
   }
   std::cout << command << ": not found" << std::endl;
 }
-/*void handleTypeCommand(std::string command, bool isknownCommand) {*/
-/*  if (!isknownCommand) {*/
-/*    handleNotValidCommand(command);*/
-/*  } else {*/
-/**/
-/*    std::string envPath = getExecutablePath(command);*/
-/*    std::vector<std::string> paths = splitString(envPath, pathSeparator);*/
-/**/
-/*    for (std::string path : paths) {*/
-/*      /*std::cout << path << std::endl;*/
-/*      for (const auto &entry : fs::directory_iterator(path)) {*/
-/**/
-/*        if (entry.path().string() == path + "/" + command) {*/
-/*          std::cout << command << " is " << entry.path().string() << " "*/
-/*                    << std::endl;*/
-/*        }*/
-/*      }*/
-/*    }*/
-/*  }*/
-/*}*/
 
 int main() {
   // Flush after every std::cout / std::cerr
