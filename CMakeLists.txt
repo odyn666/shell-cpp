@@ -10,4 +10,4 @@ add_executable(shell ${SOURCE_FILES})
 
 include_directories("src/handler")
 
-target_include_directories(shell PRIVATE src)
+target_include_directories(shell PRIVATE ${CMAKE_SOURCE_DIR}/src)
