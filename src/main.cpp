@@ -74,10 +74,10 @@ std::string getExecutablePath(std::string &command) {
   return envPath;
 }
 void handleTypeCommand(std::string command, bool isKnownCommand) {
-  if (!isKnownCommand) {
-    std::cout << command << ": not found" << std::endl;
-    return;
-  }
+  /*if (!isKnownCommand) {*/
+  /*  std::cout << command << ": not found" << std::endl;*/
+  /*  return;*/
+  /*}*/
 
   std::string envPath = std::getenv("PATH"); // Get system PATH variable
   std::vector<std::string> paths =
