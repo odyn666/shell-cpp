@@ -1,8 +1,8 @@
 #include "handler/command/commandHandler.h"
-#include <filesystem>
 #include <iostream>
 #include <ostream>
 #include <string>
+/*#include "commandHandler.h"*/
 
 int main() {
   // Flush after every std::cout / std::cerr
