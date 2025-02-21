@@ -100,7 +100,7 @@ int main() {
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
 
-  std::vector<std::string> knownCommands{"exit", "echo", "type"};
+  std::vector<std::string> knownCommands{"exit", "echo", "type", "cat"};
   std::vector<std::string> args{};
 
   while (true) {
