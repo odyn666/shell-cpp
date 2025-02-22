@@ -225,6 +225,7 @@ void handleTypeCommand(std::string command, bool isKnownCommand) {
 
     std::cout << command << " is " << path << std::endl;
   }
+  // TODO: double check if its necessary if not delete
   if (paths.empty()) {
     /*std::cout << command << ": not found" << std::endl;*/
   }
