@@ -2,8 +2,8 @@
 #include <cstddef>
 #include <iostream>
 #include <ostream>
+#include <regex>
 #include <string>
-
 #define Log(x) std::cout << x << std::endl;
 
 int main() {
@@ -19,7 +19,7 @@ int main() {
 
     std::string input;
     std::getline(std::cin, input);
-
+    std::string qtText{""};
     if (input.empty())
       continue;
 
@@ -33,6 +33,23 @@ int main() {
     // finds command in vector and Ensures we don't access splitedCommands[0] if
     // the input is empty
     bool isKnownCommand = isCommandValid(knownCommands, splitedCommands[0]);
+    std::regex quotationRgx(R"(['"]([^'"]*)['"])");
+    std::smatch match;
+    if (std::regex_search(input, match, quotationRgx)) {
+      args.clear();
+      while (std::regex_search(input, match, quotationRgx)) {
+        std::string extracted = match[1]; // Get quoted content
+
+        // If previous match was adjacent (no space between), merge with last
+        // argument
+        if (!args.empty() && match.prefix().str().empty()) {
+          args.back() += extracted;
+        } else {
+          args.push_back(extracted);
+        }
+        input = match.suffix().str();
+      }
+    }
 
     if (isKnownCommand) {
 
@@ -58,6 +75,7 @@ int main() {
         handleCdCommand(args[0]);
       }
 
+      // checking for quotation marks
     } else {
       std::string pathToExecutable{};
       if (extractPathToExecutable(splitedCommands[0]).empty()) {
