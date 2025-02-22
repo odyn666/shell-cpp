@@ -9,7 +9,7 @@ int main() {
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
 
-  std::vector<std::string> knownCommands{"exit", "echo", "type"};
+  std::vector<std::string> knownCommands{"exit", "echo", "type", "pwd"};
   std::vector<std::string> args{};
 
   while (true) {
@@ -46,6 +46,10 @@ int main() {
       if (splitedCommands[0] == "type") {
         handleTypeCommand(args[0],
                           isCommandValid(knownCommands, splitedCommands[1]));
+      }
+
+      if (splitedCommands[0] == "pwd") {
+        handlePwdCommand();
       }
     } else {
       std::string pathToExecutable{};

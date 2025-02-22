@@ -1,7 +1,5 @@
 #pragma once
 
-
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -23,3 +21,5 @@ std::vector<std::string> extractPathToExecutable(std::string command);
 void handleTypeCommand(std::string command, bool isKnownCommand);
 
 void handleFileExecution(std::string &path, std::vector<std::string> args);
+
+void handlePwdCommand();

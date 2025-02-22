@@ -3,6 +3,7 @@
 #include "sstream"
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -10,11 +11,17 @@
 #ifdef _WIN32
 #include <windows.h> // Windows-specific headers
 #else
+#include <linux/limits.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h> // Linux-specific headers
-
 #endif
+
+#define Log(x) std::cout << x << std::endl;
+// common imports
+using std::string;
+using std::vector;
+
 namespace fs = std::filesystem;
 
 const char pathSeparator =
@@ -26,7 +33,6 @@ const char pathSeparator =
 
 void handleNotValidCommand(std::string input) {
   std::cout << input << ": not found" << std::endl;
-
   return;
 }
 
@@ -228,5 +234,16 @@ void handleTypeCommand(std::string command, bool isKnownCommand) {
   // TODO: double check if its necessary if not delete
   if (paths.empty()) {
     /*std::cout << command << ": not found" << std::endl;*/
+  }
+}
+
+void handlePwdCommand() {
+
+  char cwd[PATH_MAX];
+  if (getcwd(cwd, sizeof(cwd)) != 0) {
+
+    Log(cwd);
+  } else {
+    perror("getcwd() error");
   }
 }
