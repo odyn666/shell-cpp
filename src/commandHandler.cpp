@@ -1,7 +1,11 @@
 #include "algorithm"
+#include "commandHandler.hpp"
 #include "filesystem"
 #include "sstream"
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <iterator>
 #include <ostream>
@@ -236,14 +240,45 @@ void handleTypeCommand(std::string command, bool isKnownCommand) {
     /*std::cout << command << ": not found" << std::endl;*/
   }
 }
+// TODO ADDD WINDOWS HANLING
+string handlePwdCommand() { return fs::current_path().string(); }
 
-void handlePwdCommand() {
+// TODO DELTE LATER
 
-  char cwd[PATH_MAX];
-  if (getcwd(cwd, sizeof(cwd)) != 0) {
+/*bool replace(std::string &str, const std::string &from, const std::string &to)
+ * {*/
+/*  size_t start_pos = str.find(from);*/
+/*  if (start_pos == std::string::npos)*/
+/*    return false;*/
+/*  str.replace(start_pos, from.length(), to);*/
+/*  return true;*/
+/*}*/
 
-    Log(cwd);
-  } else {
-    perror("getcwd() error");
+string replace(string &str, string toChange, string replaceTo) {
+  size_t pos = 0;
+  /*string result{} /;*/
+
+  while ((pos = str.find(toChange, pos)) != string::npos) {
+    str.replace(pos, toChange.length(), replaceTo);
+    pos += replaceTo.length();
   }
+
+  return replaceTo;
+}
+
+void handleCdCommand(std::string path) {
+  if (path.find("~") != string::npos) {
+
+    string homePath = getenv("HOME");
+
+    replace(path, "~", homePath);
+
+    /*return;*/
+  }
+  if (fs::exists(path) && fs::is_directory(path)) {
+
+    fs::current_path(path);
+    return;
+  }
+  Log("cd: " + path + ": No such file or directory")
 }

@@ -4,12 +4,14 @@
 #include <ostream>
 #include <string>
 
+#define Log(x) std::cout << x << std::endl;
+
 int main() {
   // Flush after every std::cout / std::cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
 
-  std::vector<std::string> knownCommands{"exit", "echo", "type", "pwd"};
+  std::vector<std::string> knownCommands{"exit", "echo", "type", "pwd", "cd"};
   std::vector<std::string> args{};
 
   while (true) {
@@ -49,8 +51,13 @@ int main() {
       }
 
       if (splitedCommands[0] == "pwd") {
-        handlePwdCommand();
+        Log(handlePwdCommand());
       }
+
+      if (splitedCommands[0] == "cd") {
+        handleCdCommand(args[0]);
+      }
+
     } else {
       std::string pathToExecutable{};
       if (extractPathToExecutable(splitedCommands[0]).empty()) {
