@@ -1,11 +1,44 @@
 #include "commandHandler.hpp"
-#include <cstddef>
 #include <iostream>
 #include <ostream>
 #include <regex>
 #include <string>
+#include <vector>
 #define Log(x) std::cout << x << std::endl;
 
+std::vector<std::string> quotationHandler(std::string input,
+                                          std::vector<std::string> &args) {
+  args.clear();
+  // Regex to match quoted strings, allowing escaped quotes inside
+  std::regex quotationRgx(R"((['"])((?:\\\1|.)*?)\1)");
+  std::smatch match;
+
+  std::string remainingText = input; // Copy input to modify
+
+  // Extract quoted arguments
+  while (std::regex_search(remainingText, match, quotationRgx)) {
+    std::string extracted = match[2]; // Get quoted content
+
+    // If previous match was adjacent (no space between), merge with last*/
+    // argument
+    if (!args.empty() && match.prefix().str().empty()) {
+      args.back() += extracted;
+    } else {
+      args.push_back(extracted);
+    }
+
+    remainingText = match.suffix().str(); // Move forward in the input
+  }
+
+  // split the remaining text (non-quoted parts) by spaces
+  std::istringstream stream(remainingText);
+  std::string word;
+  while (stream >> word) {
+    args.push_back(word);
+  }
+
+  return args;
+}
 int main() {
   // Flush after every std::cout / std::cerr
   std::cout << std::unitbuf;
@@ -36,19 +69,7 @@ int main() {
     std::regex quotationRgx(R"(['"]([^'"]*)['"])");
     std::smatch match;
     if (std::regex_search(input, match, quotationRgx)) {
-      args.clear();
-      while (std::regex_search(input, match, quotationRgx)) {
-        std::string extracted = match[1]; // Get quoted content
-
-        // If previous match was adjacent (no space between), merge with last
-        // argument
-        if (!args.empty() && match.prefix().str().empty()) {
-          args.back() += extracted;
-        } else {
-          args.push_back(extracted);
-        }
-        input = match.suffix().str();
-      }
+      quotationHandler(input, args);
     }
 
     if (isKnownCommand) {
